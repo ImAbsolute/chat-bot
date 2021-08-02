@@ -47,7 +47,7 @@ function App({ chatId }) {
 		});
 		console.log(chatList);
 	};
-	console.log(state.messages);
+	console.log(state.messages[chatId]);
   console.log(chatList.chats)
 	console.log(chatId);
 
