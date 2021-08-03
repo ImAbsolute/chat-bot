@@ -4,19 +4,23 @@ import SendIcon from "@material-ui/icons/Send";
 import Message from "./Message";
 import "./style.css";
 
-const MessageField = ({ messages, chatList, sendMessage, chatId }) => {
+const MessageField = ({ chatList, sendMessage, chatId }) => {
 	const [value, setValue] = useState("");
 
 	const handleKeyPress = (event, value) => {
 		if (event.key === "Enter") {
-			sendMessage(value);
-			setValue("");
+			if (value.length > 0) {
+        sendMessage(value);
+        setValue("");
+      }
 		}
 	};
 
 	const onHandleClick = (value) => {
-		sendMessage(value);
-		setValue("");
+		if (value.length > 0) {
+			sendMessage(value);
+			setValue("");
+		}
 	};
 
 	return (

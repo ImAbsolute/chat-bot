@@ -5,7 +5,7 @@ import ChatList from "./components/ChatList";
 import Header from "./components/Header";
 
 function App({ chatId }) {
-	const [state, setState] = React.useState({
+	const [messageList, setmessageList] = React.useState({
 		messages: {
 			1: [{ text: "Привет!", sender: "bot" }],
 			2: [{ text: "Здравствуй!", sender: "bot" }],
@@ -13,16 +13,16 @@ function App({ chatId }) {
 	});
 	const [chatList, setChatList] = React.useState({
 		chats: {
-			1: { title: "Чат 1", messageList: state.messages[1] },
-			2: { title: "Чат 2", messageList: state.messages[2] },
+			1: { title: "Чат 1", messageList: messageList.messages[1] },
+			2: { title: "Чат 2", messageList: messageList.messages[2] },
 		},
 	});
 
 	const sendMessage = (message) => {
-		setState({
+		setmessageList({
 			messages: {
-				...state.messages,
-				[chatId]: [...state.messages[chatId], { text: message, sender: "me" }],
+				...messageList.messages,
+				[chatId]: [...messageList.messages[chatId], { text: message, sender: "me" }],
 			},
 		});
 		// setChatList({
@@ -36,50 +36,60 @@ function App({ chatId }) {
 		// });
 	};
 
-	const handleAddChat = (title) => {  
+ 
+	
+
+	const handleAddChat = (title) => {
 		const chatId = Object.keys(chatList.chats).length + 1;
-		setState({
+    setmessageList({
 			messages: {
-				...state.messages,
+				...messageList.messages,
 				[chatId]: [],
 			},
 		});
-		setChatList({
+    setChatList({
 			chats: {
 				...chatList.chats,
-				[chatId]: { title: title, messageList: state.messages[chatId] },
+				[chatId]: { title: title, messageList: messageList.messages[chatId] },
 			},
 		});
 		console.log(chatList);
 	};
 
-  React.useEffect(()=>{
-    setChatList({
+	React.useEffect(() => {
+		setChatList({
 			chats: {
 				...chatList.chats,
 				[chatId]: {
 					...chatList.chats[chatId],
-					messageList: state.messages[chatId],
+					messageList: messageList.messages[chatId],
 				},
 			},
 		});
-    if (state.messages[chatId].[state.messages[chatId].length-1].sender === "me") {
+		if (
+			messageList.messages[chatId][messageList.messages[chatId].length - 1].sender === "me"
+		) {
 			setTimeout(
 				() =>
-					setState({
+					setmessageList({
 						messages: {
-              ...state.messages,
-              [chatId]: [...state.messages[chatId], { text: "Привет,я бот", sender: "bot" }],
-            },
+							...messageList.messages,
+							[chatId]: [
+								...messageList.messages[chatId],
+								{ text: "Привет,я бот", sender: "bot" },
+							],
+						},
 					}),
 				1000
 			);
 		}
-    
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[state])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [messageList]);
 
-	console.log(state.messages);
+  
+
+  
+	console.log(messageList.messages);
 	console.log(chatList.chats);
 	console.log(chatId);
 
@@ -102,9 +112,8 @@ function App({ chatId }) {
 		<div className="App">
 			<Header chatId={chatId} />
 			<div className="wrapper">
-				<ChatList handleAddChat={handleAddChat} chats={chatList.chats} />
+				<ChatList handleAddChat={handleAddChat}  chats={chatList.chats} />
 				<MessageField
-					messages={state}
 					chatList={chatList}
 					sendMessage={sendMessage}
 					chatId={chatId}
