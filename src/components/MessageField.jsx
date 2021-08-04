@@ -12,11 +12,15 @@ const MessageField = ({ chatId }) => {
 
 	const [value, setValue] = React.useState("");
 
-	const handleKeyPress = (event, value) => {
-		if (event.key === "Enter") {
-			setValue("");
-		}
-	};
+	const handleKeyPress = React.useCallback(
+		(event) => {
+			if (event.key === "Enter") {
+				dispatch(addMessageToState(value, chatId));
+				setValue("");
+			}
+		},
+		[dispatch, value, chatId]
+	);
 
 	const onHandleClick = React.useCallback(() => {
 		dispatch(addMessageToState(value, chatId));
