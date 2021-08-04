@@ -1,28 +1,32 @@
-import { React, useState } from "react";
+import React from "react";
 import { Fab, Input } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import Message from "./Message";
 import "./style.css";
+import { useDispatch, useSelector } from "react-redux";
+import { addMessageToState } from "./Actions/messages";
 
-const MessageField = ({ messages, chatList, sendMessage, chatId }) => {
-	const [value, setValue] = useState("");
+const MessageField = ({ chatId }) => {
+	const message = useSelector((glogalState) => glogalState.messages);
+	const dispatch = useDispatch();
+
+	const [value, setValue] = React.useState("");
 
 	const handleKeyPress = (event, value) => {
 		if (event.key === "Enter") {
-			sendMessage(value);
 			setValue("");
 		}
 	};
 
-	const onHandleClick = (value) => {
-		sendMessage(value);
+	const onHandleClick = React.useCallback(() => {
+		dispatch(addMessageToState(value, chatId));
 		setValue("");
-	};
+	}, [dispatch, value, chatId]);
 
 	return (
 		<div className="layout">
 			<div className="MessageField">
-				{chatList.chats[chatId].messageList.map((item, index) => (
+				{message[chatId].map((item, index) => (
 					<div
 						key={index}
 						className="message"
