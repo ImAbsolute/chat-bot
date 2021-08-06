@@ -9,3 +9,9 @@ export function addMessageToState(message, chatId) {
         },
     };
 }
+
+export function addMessage(message, chatId) {
+    return async(dispatch, getState) => {
+        dispatch(addMessageToState(message, chatId));
+    };
+}

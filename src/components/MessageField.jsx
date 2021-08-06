@@ -4,18 +4,19 @@ import SendIcon from "@material-ui/icons/Send";
 import Message from "./Message";
 import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
-import { addMessageToState } from "./Actions/messages";
+import { addMessage } from "./Actions/messages";
 
 const MessageField = ({ chatId }) => {
 	const message = useSelector((glogalState) => glogalState.messages);
 	const dispatch = useDispatch();
+	const timer = React.useRef(null);
 
 	const [value, setValue] = React.useState("");
 
 	const handleKeyPress = React.useCallback(
 		(event) => {
 			if (event.key === "Enter") {
-				dispatch(addMessageToState(value, chatId));
+				dispatch(addMessage({ text: value, sender: "me" }, chatId));
 				setValue("");
 			}
 		},
@@ -23,9 +24,22 @@ const MessageField = ({ chatId }) => {
 	);
 
 	const onHandleClick = React.useCallback(() => {
-		dispatch(addMessageToState(value, chatId));
+		dispatch(addMessage({ text: value, sender: "me" }, chatId));
 		setValue("");
 	}, [dispatch, value, chatId]);
+
+	React.useEffect(() => {
+		if (message[chatId][message[chatId].length - 1].sender === "me") {
+			timer.current = setTimeout(() => {
+				dispatch(
+					addMessage(
+						{ text: "Не приставай ко мне я бот!", sender: "bot" },
+						chatId
+					)
+				);
+			}, 1000);
+		}
+	}, [message]);
 
 	return (
 		<div className="layout">

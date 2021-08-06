@@ -13,7 +13,7 @@ export const messageReduser = (state = initialState, action) => {
                 ...state,
                 [action.payload.chatId]: [
                     ...(state[action.payload.chatId] || []),
-                    { text: action.payload.message, sender: "me" },
+                    action.payload.message,
                 ],
             };
         case ADD_NEW_MESSAGE_LIST:
